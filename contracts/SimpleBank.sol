@@ -4,7 +4,7 @@
  * https://solidity.readthedocs.io/en/latest/080-breaking-changes.html
  */
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8;
+pragma solidity ^0.8;
 
 
 contract SimpleBank {
@@ -114,9 +114,11 @@ contract SimpleBank {
       address payable accountHolder;
       accountHolder = payable(msg.sender);
       uint currBalance = balances[accountHolder];
-      require(currBalance > withdrawAmount);
+      require(currBalance >= withdrawAmount);
       balances[accountHolder] -= withdrawAmount;
+      uint newBalance = balances[accountHolder];
       accountHolder.transfer(withdrawAmount);
-      emit LogWithdrawal(accountHolder, withdrawAmount, balances[accountHolder]);
+      emit LogWithdrawal(accountHolder, withdrawAmount, newBalance);
+      return(withdrawAmount);
     }
 }
